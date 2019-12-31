@@ -1,0 +1,11 @@
+[
+    {
+        "url": "https://example.com",
+        "repoID": 0,
+        "events": [
+            "push",
+            "pull-request"
+        ],
+        "checkSSL": false
+    }
+]

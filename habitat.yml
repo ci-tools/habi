@@ -1,0 +1,46 @@
+.vars:
+  k3s-version: v1.0.1
+  k3s-sha256: db64194b945d9946c37690d8d616b695ee6b8f276ae9c0a33741e6b7a8fbfafb
+
+k3s-start:
+  - k3s-bin
+  - cmd: >
+      k3s server
+      --no-deploy traefik
+      --no-deploy local-storage
+
+k3s-bin:
+  - cmd: echo hello
+  - file:
+      src: https://github.com/rancher/k3s/releases/download/{{ .k3s_version }}/k3s
+      dst: /usr/local/bin/k3s
+      sha256: "{{ .k3s-sha256 }}"
+      mode: "0755"
+    as: root
+
+if-env:
+  - cmd: echo tatat
+    if: os.env("TATATA") is defined
+
+if-cond-test:
+  - k3s-pid-file=stat: /var/lock/k3s.pid
+  - if: stat(/var/lock/k3s.pid).exists
+    cmd: k3s stop
+  - for: list-of-files
+    for-var: file
+    cmd: echo ${file}
+
+
+# local-mods:
+#   k3s-start:
+#     run: []
+
+# the-same:
+#  - dec: str
+#  - dec:
+#      - cmd: str
+
+# any:
+#  - file
+#  - cmd
+#  - http
